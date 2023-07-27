@@ -1,0 +1,21 @@
+{
+	"name": "Test",
+	"description": "Test",
+	"version": "1.0",
+	"manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+   
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*" ], 
+      "js": ["popup.js"]
+    
+    }]
+    ,
+	"action": {
+		"default_popup": "popup.html"
+	},
+	"permissions": [ "activeTab","scripting" ]
+}
