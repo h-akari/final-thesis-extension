@@ -1,4 +1,14 @@
-fetch('http://localhost:3000/api/blinji/test/暑い')
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+ 
+  console.log(request)
+  sendResponse("i got data")
+  
+})
+
+fetch('http://localhost:3000/api/blinji/htmlSendingReq',{
+  method:"POST",
+  body: data
+})
   .then((response) => {
     
     return response.json()
