@@ -6,7 +6,7 @@ async function main()
 {
  
       
-      
+  
 	//アクティブなタブを取得
 	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 	//アクティブなタブでJavaScript(parseDOM)を実行
@@ -56,6 +56,8 @@ async function main()
     console.log(newHomonymArray)
   })
 
+  var final
+
     //apiへ送り、easywordsを得る
   for(var i=0; i<newHomonymArray.length; ++i){ 
   await fetch('http://localhost:3000/api/blinji/easyWordReq/' + newHomonymArray[i],{
@@ -66,25 +68,28 @@ async function main()
     return response.json()
    })
   .then((message2) => {
-    message2 = JSON.stringify(message2)
-    console.log(message2)//object value
+    message2 = message2.easyword
     console.log(newHomonymArray[i])
+    console.log(message2)//object value
+    
     console.log("5:receiving data api=>extension (background)" )
       let reg = newHomonymArray[i]
-      let rep = message2
-    data = data.replace(new RegExp(reg,'g'),new RegExp(rep))
+      data = data.replace(new RegExp(reg,'g'),message2)
   })
     final = data
     
-                    
-
-                    
-   
-
-
   }
+
   console.log(final)
-  document.getElementById('result').innerHTML = final
+  document.getElementById('result').outerHTML = "変換完了"
+
+
+  let [tab1] = await chrome.tabs.query({ active: true, currentWindow: true });
+  await chrome.scripting.executeScript({
+		target:{tabId:tab1.id, allFrames: true},
+		func:modification,
+    args:[final]
+    })
 }
         
           
@@ -93,6 +98,7 @@ async function main()
 {   
     console.log("1")
     return document.body.innerHTML;
+  
    
     
 
@@ -107,9 +113,11 @@ async function main()
 
 }   
 
-function transform(final)
-
-{
+function modification(final)
+{   
+    console.log("modify")
+    document.body.innerHTML=final
+    return 0
 
 }
     
